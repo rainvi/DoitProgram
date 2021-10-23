@@ -1,6 +1,6 @@
 from TextExtract import *
 
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from collections import Counter

@@ -123,8 +123,3 @@ def get_docx_text(filename):
         if texts:
             paragraphs.append(''.join(texts))
     return '\n\n'.join(paragraphs)
-
-
-
-
-def tokenize(text):
