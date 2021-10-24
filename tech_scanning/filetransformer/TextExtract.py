@@ -11,8 +11,11 @@ import struct
 import win32com.client as win32
 
 class TextExtract:
+    def __init__(self, file_path):
+        self.file_path = file_path
+
     ##pdf에서 글자 추출
-    def get_pdf_text(filename):
+    def get_pdf_text(self):
         rsrcmgr = PDFResourceManager()
         retstr = StringIO()
         codec = "utf-8"
@@ -23,7 +26,7 @@ class TextExtract:
             codec=codec,
             laparams=laparams
         )
-        fp = open(filename, 'rb')
+        fp = open(self.file_path, 'rb')
         interpreter = PDFPageInterpreter(rsrcmgr, device)
         password = ""
         maxpages = 0
@@ -48,8 +51,8 @@ class TextExtract:
         return text
 
     #hwp에서 text 얻기.
-    def get_hwp_text(filename):
-        f = olefile.OleFileIO(filename)
+    def get_hwp_text(self):
+        f = olefile.OleFileIO(self.file_path)
         dirs = f.listdir()
 
         # HWP 파일 검증
@@ -105,13 +108,20 @@ class TextExtract:
     TEXT = NAMESPACE + 't'
 
 
-    def get_docx_text(filename):
+    def get_docx_text(self):
         word = win32.Dispatch("Word.Application")
         word.Visible = 0
 
-        doc1 = word.Documents.Open(filename)
+        doc1 = word.Documents.Open(self.file_path)
 
         test = str(doc1.Content)
         test = test.replace('\r', '\n')
         word.Quit()
         return test
+
+"""
+검산 코드
+my_text_path = "C:/Users/wonai/mystatus/Doit_program/tech_scanning/filetransformer/practice.hwp"
+te = TextExtract(my_text_path)
+print(te.get_hwp_text())
+"""
