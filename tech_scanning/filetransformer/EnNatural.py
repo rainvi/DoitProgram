@@ -1,96 +1,73 @@
 from TextExtract import *
 
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.stem import WordNetLemmatizer
+from nltk import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
-from collections import Counter
-from collections import Counter
+import pandas as pd
+from bs4 import BeautifulSoup
+import re
+import nltk
+import matplotlib.pyplot as plt
+from matplotlib import rc
+import seaborn as sns
 
-text = "text 경로, 텍스트 str화 해서 text변수에 " \
-       "저장."
-#배열 출력
-word_list_en = word_tokenize(text)
-sentence_list_en = sent_tokenize(text)
-#word_tokenize(text) // 단어 토큰화
-#pos_tag(tokenized_sentence) // (단어, 품사) 토큰화
-
-#표제어 추출
-lemmatizer = WordNetLemmatizer()
-result = [lemmatizer.lemmatize(w) for w in word_list_en]
-
-#어간 추출
-
-#불용어 제거하기.
-#stop word는 강계 찾아보면서 더 추가해두기. 아니면 메모장txt에 불용어 리스트 저장해서 불러와서 쓰는 것도 좋다.
-stop_words = "any if or i wer was are am "
-stop_words = set(stop_words.split(' '))
-
-result = [word for word in word_list_ko if not word in stop_words]
-
-vocab = {}
-preprocessed_sentences = []
-stop_words = set(stopwords.words('english'))
-
-for sentence in sentences:
-    # 단어 토큰화
-    tokenized_sentence = word_tokenize(sentence)
-    result = []
-
-    for word in tokenized_sentence:
-        word = word.lower() # 모든 단어를 소문자화하여 단어의 개수를 줄인다.
-        if word not in stop_words: # 단어 토큰화 된 결과에 대해서 불용어를 제거한다.
-            if len(word) > 2: # 단어 길이가 2이하인 경우에 대하여 추가로 단어를 제거한다.
-                result.append(word)
-                if word not in vocab:
-                    vocab[word] = 0
-                vocab[word] += 1
-    preprocessed_sentences.append(result)
-vocab_sorted = sorted(vocab.items(), key = lambda x:x[1], reverse = True)
-word_to_index = {}
-i = 0
-for (word, frequency) in vocab_sorted :
-    if frequency > 1 : # 빈도수가 작은 단어는 제외.
-        i = i + 1
-        word_to_index[word] = i
-
-vocab_size = 5
-words_frequency = [word for word, index in word_to_index.items() if index >= vocab_size + 1] # 인덱스가 5 초과인 단어 제거
-for w in words_frequency:
-    del word_to_index[w] # 해당 단어에 대한 인덱스 정보를 삭제
-word_to_index['OOV'] = len(word_to_index) + 1
-
-encoded_sentences = []
-for sentence in preprocessed_sentences:
-    encoded_sentence = []
-    for word in sentence:
-        try:
-            encoded_sentence.append(word_to_index[word])
-        except KeyError:
-            encoded_sentence.append(word_to_index['OOV'])
-    encoded_sentences.append(encoded_sentence)
-
-all_words_list = sum(preprocessed_sentences, [])
-vocab = Counter(all_words_list)
-vocab_size = 5
-vocab = vocab.most_common(vocab_size) # 등장 빈도수가 높은 상위 5개의 단어만 저장
-
-word_to_index = {}
-i = 0
-for (word, frequency) in vocab :
-    i = i + 1
-    word_to_index[word] = i
-
-all_words_list = sum(preprocessed_sentences, [])
-print(all_words_list)
-vocab = Counter(all_words_list)
-vocab_size = 5
-vocab = vocab.most_common(vocab_size) # 등장 빈도수가 높은 상위 5개의 단어만 저장
-word_to_index = {}
-i = 0
-for (word, frequency) in vocab :
-    i = i + 1
-    word_to_index[word] = i
-
-print(word_to_index)
+#문장으로 잘라내기
+text = "TextExtract에서 받은 text."
+tokenized_sentences = sent_tokenize(text)
+tokenized_words = []
+for line in tokenized_sentences:
+    tokenized_words.append(word_tokenize(line))
 
 
+##데이터 전처리
+def text_cleaning(text):
+    only_english = re.sub('[^a-zA-Z]', ' ', text)
+    no_capitals = only_english.lower().split()
+
+    stops = set(stopwords.words('english'))
+    no_stops = [word for word in no_capitals if not word in stops]
+    # nltk.download('stopwords')
+    stemmer = nltk.stem.SnowballStemmer('english')
+    stemmer_words = [stemmer.stem(word) for word in no_stops]
+
+    # 공백으로 구분된 문자열로 결합하여 결과 반환
+    return ' '.join(stemmer_words)
+
+
+
+#######################################
+def show_tweet_word_count_stat(data):
+    num_word = []
+    num_unique_words = []
+    for item in data:
+        num_word.append(len(str(item).split()))
+        num_unique_words.append(len(set(str(item).split())))
+
+    # 일반
+    train['num_words'] = pd.Series(num_word)
+    # 중복 제거
+    train['num_unique_words'] = pd.Series(num_unique_words)
+
+    x = data[0]
+    x = str(x).split()
+    print(len(x))
+
+    rc('font', family='AppleGothic')
+
+    fig, axes = plt.subplots(ncols=2)
+    fig.set_size_inches(18, 6)
+    print('Tweet 단어 평균 값 : ', train['num_words'].mean())
+    print('Tweet 단어 중간 값', train['num_words'].median())
+    sns.distplot(train['num_words'], bins=100, ax=axes[0])
+    axes[0].axvline(train['num_words'].median(), linestyle='dashed')
+    axes[0].set_title('Tweet 단어 수 분포')
+
+    print('Tweet 고유 단어 평균 값 : ', train['num_unique_words'].mean())
+    print('Tweet 고유 단어 중간 값', train['num_unique_words'].median())
+    sns.distplot(train['num_unique_words'], bins=100, color='g', ax=axes[1])
+    axes[1].axvline(train['num_unique_words'].median(), linestyle='dashed')
+    axes[1].set_title('Tweet 고유한 단어 수 분포')
+
+    plt.show()
+
+
+show_tweet_word_count_stat(clean_processed_tweet)
