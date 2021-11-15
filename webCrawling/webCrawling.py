@@ -1,5 +1,5 @@
 #크롤링팀원 문정빈입니다!
-# 어느정도 돌아가는 코드를 만들어서... 완성은 전혀 아니구 다듬고 살필게 많지만 일단 깃헙에 공유해요!ㅠㅠ 
+# 어느정도 돌아가는 코드를 만들어서... 완성은 전혀 아니구 다듬고 살필 게 많지만 일단 깃헙에 공유해요!ㅠㅠ 
 
 from bs4 import BeautifulSoup       #cmd의 pip명령을 통해 따로 깔아주어야 해요
 from selenium import webdriver      #이것두! webdriver은 따로 설치해야 합니다
@@ -11,9 +11,9 @@ url = "https://eureka.ewha.ac.kr/eureka/my/public.do?pgId=P531005519"   #강의�
 # 크롬 브라우저로 웹 실행
 path = "D:\python\chromedriver_win32 (1)\chromedriver.exe"
 """
-여기서 오류가 나서 많이 헤맸는데요ㅠ chrome driver 버전을 자기 컴퓨터 chrome 버전과 맞게 설정해야 잘 돌아가는 것 같아요
+여기서 오류가 나서 많이 헤맸는데ㅠ chrome driver 버전을 자기 컴퓨터 chrome 버전과 맞게 설정해야 잘 돌아가는 것 같아요
 참고한 사이트는 https://blog.naver.com/kiddwannabe/221539689821의 게시글이고,
-저같은 경우에는 chrome 버전이 95라서 https://sites.google.com/chromium.org/driver/여기서 받았습니다! 95와 96이 있어요
+저같은 경우에는 chrome 버전이 95라서 https://sites.google.com/chromium.org/driver/여기서 받았습니다! 95와 96은 여기 있어요
 """
 
 #미리 조건 설정 (일단 대충했어요 테스트용!! 입력이나 체크 안할거면 그냥 엔터치심 되어요)
@@ -57,7 +57,6 @@ if qEng == "1":
 else:
     print()
 
-
 #원격강의 체크박스 체크.
 if qRem == "1":
     remoteCheck = driver.find_element_by_id(
@@ -72,6 +71,7 @@ className.click()           #클릭을 하지 않고 send keys를 사용하면 �
 className.send_keys(classNum)
 time.sleep(3)  #sleep을 쓰지 않으면 selenium이 개복치처럼 종료되기 때문에 시간을 줍니다
 #그래서 좀 시간이 걸릴 수 있어요! 기다리면 결과가 나올거에요
+#만약 갑자기 꺼지는 오류가 계속 난다면 sleep의 값을 좀 더 늘려주면 됩니다! 
 
 #교과목명 text box
 className = driver.find_element_by_id('mainframe_VFrameSet_WorkFrame_Child__form_div_Work_div_search_ipbSubjectNm_input')
@@ -87,7 +87,7 @@ time.sleep(3)
 soup = BeautifulSoup(driver.page_source,"html.parser")
 #print(soup.text)    #줄줄줄 출력됨
 #print(soup.prettify())  #html이 이쁘게 출력됨
-driver.find_element_by_id("mainframe_VFrameSet_WorkFrame_Child__form_div_Work_grxMain_body_gridrow_0_cell_0_16").click()    #이부분 아직 범용x
+driver.find_element_by_id("mainframe_VFrameSet_WorkFrame_Child__form_div_Work_grxMain_body_gridrow_0_cell_0_16").click()    #이부분 아직 범용 구현x
 time.sleep(10)
 
 #헐 다운로드가 되네요!! ㅠㅠ 일단 영어강의 원격강의 체크했을 때 가장 먼저 보이는 글로벌어쩌구 강의계획서를 저장할 수 있는 상태에요!
@@ -99,5 +99,5 @@ time.sleep(10)
 2. 조건을 완벽히 설정할 수 있도록 구현하기 : select option은 text, check box와 달리 오류가 떠서 고치고 있어요ㅠㅠ!
 3. 강의계획안에 국문/영문/FILE/URL이 있는데, 전부 클릭하게 구현하기
 4. 일괄적으로 다운로드 할 수 있게 구현하기
-많네요...ㅠ
+11. 위의 문제를 모두 해결하고 나면 실시간 변경사항 반영해서 긁어오기, 기타 다른 기능 구현 등등...
 """
