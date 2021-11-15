@@ -11,6 +11,8 @@ import comtypes
 import ntpath
 from pdf2jpg import pdf2jpg
 
+import win32com.client
+
 #pdf 파일을 jpg로 바꿔준다.
 #pdf가 여러장일 경우 dir을 생성하여 그 안에 이미지 여러 장 생성.
 #이 때 dir의 이름은 파일명.pdf_dir이 되며
@@ -40,3 +42,16 @@ def word_to_pdf(file):
 def word_to_jpg(file):
     with suppress(KeyError): pdf_to_jpg(word_to_pdf(file))
     #실행하면 에러는 뜨는데 실행되긴 됨. 근데 무슨 에러인지를 모르겠음...
+
+def hwp_to_pdf(file):
+    dest = os.path.dirname(file)
+
+    hwp = win32com.client.gencache.EnsureDispatch('HWPFrame.HwpObject')
+    hwp.RegisterModule('FilePathCheckDLL', 'SecurityModule')
+    hwp.Open(os.path.join(dest, file))
+    hwp.HAction.GetDefault("FileSaveAs_S", hwp.HParameterSet.HFileOpenSave.HSet)
+    pre, ext = os.path.splitext(file)
+    hwp.HParameterSet.HFileOpenSave.filename = os.path.join(dest,pre + ".pdf")
+    hwp.HParameterSet.HFileOpenSave.Format = "PDF"
+    hwp.HAction.Execute("FileSaveAs_s", hwp.HParameterSet.HFileOpenSave.HSet)
+    hwp.Quit()
