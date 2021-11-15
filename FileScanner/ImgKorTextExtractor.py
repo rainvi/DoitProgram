@@ -22,3 +22,9 @@ def img_extract_kor(file): #파라미터는 이미지파일 절대경로
     pytesseract.pytesseract.tesseract_cmd = r"테서렉트 위치 절대경로"
     text = pytesseract.image_to_string(Image.open(file), lang="kor")
     return text
+
+#텍스트 파일에 저장하는 코드
+#with open("new.text", "w", encoding = "utf8") as f:
+#   f.write(text)
+#   f.write("\n\n\n")
+#   f.write(text.replace(" ",""))
