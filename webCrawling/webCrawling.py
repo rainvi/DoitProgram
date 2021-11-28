@@ -89,7 +89,7 @@ for i in range(1, 9):
     #print(soup.text)    #줄줄줄 출력됨
     #print(soup.prettify())  #html이 이쁘게 출력됨
 
-    # 해당 id가 없을 경우 스루할 수 있는 코드가 필요
+    # 해당 검색결과가 없을 경우 스루할 수 있는 코드가 필요
     if soup.find("div", id = 'mainframe_VFrameSet_WorkFrame_Child__form_div_Work_grxMain_body_gridrow_0_cell_0_0') == None:
         pass
     else:
