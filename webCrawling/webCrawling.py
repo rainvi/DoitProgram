@@ -56,7 +56,8 @@ for i in range(1, int(semesterNum)):
 '''
 select option(drop down)을 선택할 때 그냥 xpath가 아니라 full xpath를 복사해야 기능합니다.
 통상적이지 않은 input based dropdown이라 많이 헤멨네요...ㅠ
-element 찾는 법은 ctrl+F로 검색하면 빠릅니다.
+element 찾는 법은 ctrl+F로 검색하면 빠릅니다. ---> 스크롤이 생기는 dropdown의 경우 스크롤 코드를 추가해야하기 때문에 down key로 변경해서 구현하였습니다.
+혹시 나중에 쓰일 일이 있을까봐 주석으로 남겨둬요!
 '''
 #교과목 구분 설정하기
 # 귀찮게 설정하는 이유 : 교과목이 너무 많아서 사이트 자체에서 조건을 하나 이상 설정하게끔 막아놨습니다. 스크롤이 터지는 걸 방지하기 위한 것 같아요
