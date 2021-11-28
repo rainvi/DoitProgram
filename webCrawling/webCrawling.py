@@ -118,7 +118,7 @@ for i in range(1, 9):
 
          while(Temp == 1):
              Total +=1
-             if (Total >= tempText):
+             if (Total > tempText):
                  break
              if soup.find("div",id ='mainframe_VFrameSet_WorkFrame_Child__form_div_Work_grxMain_body_gridrow_'+str(count)+'_cell_'+str(count)+'_0') == None:
                  break
